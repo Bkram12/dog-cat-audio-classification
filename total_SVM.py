@@ -116,7 +116,7 @@ def create_fft(file):
     try:
 
         fft = np.fft.rfft(wav_file)
-        np.save(f'./fft_10sec/fft-{file[:-4]}.npy',fft)
+        np.save(f'./fft/fft-{file[:-4]}.npy',fft)
 #
     except:
         print(f'skipping{file}')
@@ -184,17 +184,17 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import LogisticRegression
 
 models = [
-#            ['KNClassifier', KNeighborsClassifier(n_neighbors=3)],
-#            ['DTClassifier', DecisionTreeClassifier(max_depth=20)],
-#            ['RFClassifier', RandomForestClassifier(max_depth=20, n_estimators=20)],
-#            ['LogReg', LogisticRegression(solver='lbfgs')]
-#            ['GPClassifier',GaussianProcessClassifier(1.0 * RBF(1.0))],
-#            ['ABClassifier', AdaBoostClassifier()],
-#            ['SVMlin', SVC(kernel='linear', gamma = 'scale', probability=True)],
-#            ['SVMpoly', SVC(kernel='poly', gamma = 'scale', probability=True)],
-#            ['SVMrbf', SVC(kernel='rbf', gamma = 'scale', probability=True)],
-#            ['SVMsig', SVC(kernel='sigmoid', gamma = 'scale', probability=True)],
-#            ['MLPClassifier(10,10,10)', MLPClassifier(hidden_layer_sizes=(20,20,20), activation='relu', solver='adam',max_iter=1000 ,early_stopping=True)],
+            ['KNClassifier', KNeighborsClassifier(n_neighbors=3)],
+            ['DTClassifier', DecisionTreeClassifier(max_depth=20)],
+            ['RFClassifier', RandomForestClassifier(max_depth=20, n_estimators=20)],
+            ['LogReg', LogisticRegression(solver='lbfgs')]
+            ['GPClassifier',GaussianProcessClassifier(1.0 * RBF(1.0))],
+            ['ABClassifier', AdaBoostClassifier()],
+            ['SVMlin', SVC(kernel='linear', gamma = 'scale', probability=True)],
+            ['SVMpoly', SVC(kernel='poly', gamma = 'scale', probability=True)],
+            ['SVMrbf', SVC(kernel='rbf', gamma = 'scale', probability=True)],
+            ['SVMsig', SVC(kernel='sigmoid', gamma = 'scale', probability=True)],
+            ['MLPClassifier(10,10,10)', MLPClassifier(hidden_layer_sizes=(20,20,20), activation='relu', solver='adam',max_iter=1000 ,early_stopping=True)],
             ['MLPClassifier(100,100,100)', MLPClassifier(hidden_layer_sizes=(100,100,100), activation='relu', solver='adam',max_iter=1000 ,early_stopping=True)],
            ]
 
@@ -251,4 +251,4 @@ for i in range(len(y_error)):
     if y_error[i]!=0:
         print(filenames[i])
 
-# Something Ive added as a github test
+# Something I've added as a github test
