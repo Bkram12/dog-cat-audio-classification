@@ -222,7 +222,7 @@ model_data.columns = ['model','f1_testdata','f1_valdata']
 
 print(model_data)
 #
-#plt.figure()
+plt.figure()
 plt.scatter(model_data['f1_testdata'],model_data['f1_valdata'])
 plt.xlim([0,1])
 plt.ylim([0,1])
@@ -253,4 +253,3 @@ for i in range(len(y_error)):
     if y_error[i]!=0:
         print(filenames[i])
 
-# Something I've added as a github test
