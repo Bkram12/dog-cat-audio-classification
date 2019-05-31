@@ -76,9 +76,9 @@ def clean_data(files):
         mask = mask_low_vol(wav_file, threshold)
         wav_file = wav_file[mask]
         if len(wav_file)>0:
-            while (len(wav_file)<LEN*fs):
+            while (len(wav_file)<int(LEN*fs)):
                 wav_file = np.append(wav_file,wav_file)
-            wav_file=wav_file[0:LEN*fs]
+            wav_file=wav_file[0:int(LEN*fs)]
             wavfile.write(filename=f'./removed_noise/{file}',rate=fs, data=wav_file)
 LEN = 1
 files = os.listdir(f'./cats_dogs')
@@ -111,15 +111,17 @@ for i in range(3,6):
 #%% create fft from data & save files
 
 def create_fft(file):
-
-    fs, wav_file = wavfile.read(f'./removed_noise/{file}')
     try:
+        fs, wav_file = wavfile.read(f'./removed_noise/{file}')
+        try:
 
-        fft = np.fft.rfft(wav_file)
-        np.save(f'./fft/fft-{file[:-4]}.npy',fft)
+            fft = np.fft.rfft(wav_file)
+            np.save(f'./fft/fft-{file[:-4]}.npy',fft)
 #
+        except:
+            print(f'skipping{file}')
     except:
-        print(f'skipping{file}')
+        print(f'unreadable: {file}')
 
 
 files = os.listdir(f'./removed_noise')
@@ -134,7 +136,7 @@ def get_data(files):
     for file in files:
 #        data.append(abs(np.load(f'./fft_10sec/fft-{file[:-4]}.npy')))
         if file not in split_data['odd'].values:
-            data.append(abs(np.load(f'./fft_10sec/fft-{file[:-4]}.npy')))
+            data.append(abs(np.load(f'./fft/fft-{file[:-4]}.npy')))
     return (data)
 
 X_train = []
@@ -186,8 +188,8 @@ from sklearn.linear_model import LogisticRegression
 models = [
             ['KNClassifier', KNeighborsClassifier(n_neighbors=3)],
             ['DTClassifier', DecisionTreeClassifier(max_depth=20)],
-            ['RFClassifier', RandomForestClassifier(max_depth=20, n_estimators=20)],
-            ['LogReg', LogisticRegression(solver='lbfgs')]
+            ['RFClassifier', RandomForestClassifier(max_depth=20, n_estimators=100)],
+            ['LogReg', LogisticRegression(solver='lbfgs')],
             ['GPClassifier',GaussianProcessClassifier(1.0 * RBF(1.0))],
             ['ABClassifier', AdaBoostClassifier()],
             ['SVMlin', SVC(kernel='linear', gamma = 'scale', probability=True)],
@@ -219,7 +221,7 @@ model_data = pd.DataFrame(model_data)
 model_data.columns = ['model','f1_testdata','f1_valdata']
 
 print(model_data)
-
+#
 #plt.figure()
 plt.scatter(model_data['f1_testdata'],model_data['f1_valdata'])
 plt.xlim([0,1])
@@ -230,7 +232,7 @@ plt.ylabel('validate')
 plt.grid()
 #%%
 
-clf = MLPClassifier(hidden_layer_sizes=(100,100,100), activation='relu', solver='adam',max_iter=1000 ,early_stopping=True)
+clf = RandomForestClassifier(max_depth=20, n_estimators=100)
 clf.fit(X_train_pca, y_train)
 y_pred = clf.predict(X_validate_pca)
 y_tp = clf.predict(X_train_pca)
